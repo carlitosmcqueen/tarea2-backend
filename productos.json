@@ -1,0 +1,17 @@
+[{
+    "title": "lapicera",
+    "precio":20,
+    "id":1
+},
+{
+    "title": "regla",
+    "precio":50,
+    "id":2
+
+},
+{
+    "title": "liquid paper",
+    "precio":30,
+    "id":3
+}
+]

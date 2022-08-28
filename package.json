@@ -1,0 +1,14 @@
+{
+  "name": "tarea3",
+  "version": "1.0.0",
+  "description": "tarea de la clase 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "carlos",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
