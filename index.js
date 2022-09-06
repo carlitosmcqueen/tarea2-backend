@@ -14,7 +14,8 @@ const productosRouter = require('./productos.js')
 app.use("/api/productos",productosRouter);
 
 
+app.use("/", express.static(__dirname +"/assets"))
 
-const server = app.listen(8080, () => {
+app.listen(8080, () => {
     console.log(`servidor express iniciado`)
 })

@@ -57,10 +57,10 @@ class Datos {
     }
     async deleteById(id) {
             
-
         try {
             const data = await fs.promises.readFile(`${this.archivo}/productos.json`, "utf-8")
             const productos = JSON.parse(data);
+            
             const arrayBorrado = productos.filter((item) => item.id !== id)
             const verricar = productos.find((item) => item.id===id);
             if(verricar) {
