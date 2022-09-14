@@ -22,8 +22,9 @@ app.set('view engine', 'hbs')
 
 const hbs = handlebars.engine({
     extname: "hbs",
-   layoutsDir: "./views/layouts/",
+    layoutsDir: "./views/layouts/",
 });
+
 
 
 
