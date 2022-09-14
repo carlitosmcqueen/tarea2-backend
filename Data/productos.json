@@ -1,17 +1,1 @@
-[{
-    "title": "lapicera",
-    "precio":20,
-    "id":1
-},
-{
-    "title": "regla",
-    "precio":50,
-    "id":2
-
-},
-{
-    "title": "liquid paper",
-    "precio":30,
-    "id":3
-}
-]
+[{"title":"liquid paper","precio":30,"id":3},{"title":"joder","id":4},{"title":"joder","id":5},{"id":2,"title":"joder","precio":123},{"id":5},{"id":6},{"id":7},{"id":8},{"id":9},{"title":"24","id":10},{"title":"24","id":11},{"title":"caca","id":12}]

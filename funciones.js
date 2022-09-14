@@ -1,34 +1,27 @@
 const fs = require('fs');
-
-const data = fs.readFileSync("./Data/productos.json", "utf-8");
-
 class Datos {
-
     constructor(archivo) {
         this.archivo = archivo
     }
-
     async save(producto) {
         try {
-            const data = await fs.promises.readFile(`${this.archivo}/productos.json`, `utf-8`)
+            const data = await fs.promises.readFile(`${this.archivo}`, `utf-8`)
             const productos = JSON.parse(data);
             const id = productos.length + 1;
             producto.id = id;
             productos.push(producto);
             const productosString = JSON.stringify(productos);
-            await fs.promises.writeFile(`${this.archivo}/productos.json`, productosString)
-            return "Se agrego comida su id es "+producto.id
+            await fs.promises.writeFile(`${this.archivo}`, productosString)
+            return producto.id
 
         } catch (error) {
-            return "no se pudo leer el archvo"
+            return "no se guardar"
 
         }
     }
 
     async getById(id) {
-        
-
-        const data = await fs.promises.readFile(`${this.archivo}/productos.json`,"utf-8");
+        const data = await fs.promises.readFile(`${this.archivo}`, "utf-8");
         const productos = JSON.parse(data);
         const producto = productos.find((producto) => producto.id == id);
         if (producto) {
@@ -40,50 +33,45 @@ class Datos {
 
     }
 
-    async random(){
-        try{
-            const data = await fs.promises.readFile(`${this.archivo}/productos.json`, "utf-8")
+    async random() {
+        try {
+            const data = await fs.promises.readFile(`${this.archivo}`, "utf-8")
             const dataArray = JSON.parse(data);
-            const aleatorio = Math.floor(Math.random()*dataArray.length);
+            const aleatorio = Math.floor(Math.random() * dataArray.length);
             const valor = dataArray[aleatorio]
 
             return valor
 
-        }catch{
+        } catch {
             return "ocurrio un error inesperado"
-
         }
-
     }
     async deleteById(id) {
-            
+
         try {
-            const data = await fs.promises.readFile(`${this.archivo}/productos.json`, "utf-8")
+            const data = await fs.promises.readFile(`${this.archivo}`, "utf-8")
             const productos = JSON.parse(data);
-            
             const arrayBorrado = productos.filter((item) => item.id !== id)
-            const verricar = productos.find((item) => item.id===id);
-            if(verricar) {
-                await fs.promises.writeFile(`${this.archivo}/productos.json`, JSON.stringify(arrayBorrado))
+            const verricar = productos.find((item) => item.id === id);
+            if (verricar) {
+                await fs.promises.writeFile(`${this.archivo}`, JSON.stringify(arrayBorrado))
                 return "se borro el archivo correctamente"
-            }else{
+            } else {
                 return "no se encontro el archivo"
             }
-            // await fs.promises.writeFile(`${this.archivo}/productos.json`, JSON.stringify(arrayBorrado))
-            // return "se borro el archivo"
 
-        } catch (error){
+        } catch (error) {
             return "error el leer el archivo borrado por id"
         }
 
     }
     async getAll() {
         try {
-            const data = await fs.promises.readFile(`${this.archivo}/productos.json`, "utf-8")
+            const data = await fs.promises.readFile(`${this.archivo}`, "utf-8")
             const datos = JSON.parse(data)
             return datos
 
-        } catch (error){
+        } catch (error) {
             return "error al leer el archivo"
         }
 
@@ -91,9 +79,8 @@ class Datos {
     }
     async deleteAll() {
         try {
-            //creo q se refiere a esto no?
-            // fs.unlinkSync(`${this.archivo}/productos.json`, "utf-8")
-            fs.promises.writeFile(`${this.archivo}/productos.json`,JSON.stringify([]))
+
+            fs.promises.writeFile(`${this.archivo}`, JSON.stringify([]))
 
             console.log('se borro la lista')
         } catch (err) {
@@ -102,19 +89,52 @@ class Datos {
 
     }
 
+    async updateById(id, objetoNuevo) {
+        try {
+            const data = fs.readFileSync(this.archivo, "utf-8");
+            let dataParseada = JSON.parse(data);
+            let productoViejo = dataParseada.find((objeto) => objeto.id === id);
+            
+            if (productoViejo === undefined) {
+                throw {
+                    msg: "404 Not found"
+                };
+            }
+            let productosFiltrados = dataParseada.filter((objeto) => objeto.id !== id);
+            productoViejo = {
+                id,
+                ...objetoNuevo
+            };
+            productosFiltrados.push(productoViejo);
+            fs.writeFileSync(this.archivo, JSON.stringify(productosFiltrados, null, 2));
+            return "se remplazo el producto";
 
+
+        } catch (error) {
+            return "no se encontro el producto a cambiar"
+
+        }
+
+
+
+    }
 }
-async function start() {
-    const db = new Datos("Data");
 
-    console.log(await db.save({
-        "title": "goma",
-        "precio": 5
-       }))
-    console.log(await db.getAll())
-    //console.log(await db. para ver probar las diferentes funciones)
 
-}
+
+
+
+// async function start() {
+//     const db = new Datos("Data");
+
+//     console.log(await db.save({
+//         "title": "goma",
+//         "precio": 5
+//        }))
+//     console.log(await db.getAll())
+//     //console.log(await db. para ver probar las diferentes funciones)
+
+// }
 
 
 module.exports = Datos;

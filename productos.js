@@ -1,68 +1,89 @@
 const express = require('express')
 const {Router} = require("express")
-
-
 const router= Router()
+const multer= require('multer')
+const app = express()
+const contenedor = require('./funciones.js')
+const cont = new contenedor("./Data/productos.json")
 
-let productos=[]
+app.use(express.urlencoded({extended:true}))
+app.use(express.json())
 
-router.get('/',(req, res)=>{
 
-    if(productos=[]){
-        res.send({error: "llene la lista de productos"})
-    }else(
-        res.send({productos})
-    )
-})
-
-router.get('/:id',(req, res)=>{
-    const {id}= req.params
-    const encontrar = productos.find((producto) => producto.id == id)
-    if(encontrar){
-        res.send(encontrar)
-    }else{
-        res.send({error:"producto no encontrado"})
+const storage = multer.diskStorage({
+    filename: (req,file,cb) => {
+        cb(null,file.fieldname)
+    },
+    destination:(req,file,cb) => {
+        cb(null,"uploads")
     }
-
 })
 
-router.post('/agregados',(req, res)=>{
+
+const upload = multer({storage})
+
+router.get('/',async (req, res)=>{
+
+    try{
+        const data = await cont.getAll()
+        res.send(data)
+    }catch (error){
+        res.send({error:"no se pudo leer el archivo"})
+    }
     
-    const {nombre,precio,url}= req.body
-    const id = productos.length+1
-    productos.id=id
-    productos.push({nombre,precio,url,id})
-    res.send({ Agregado : { nombre,precio,url,id}})
 })
-router.put("/:id",(req, res)=>{
-    const {nombre, precio, url} = req.body;
-    const {id}= req.params
-    const encontrar = productos.find((producto) => producto.id == id)
 
-    if(encontrar){
-        encontrar.nombre = nombre;
-        encontrar.precio = precio;
-        encontrar.url = url;
-        res.send(encontrar)
-    }else{
-        res.send({error:"producto no encontrado"})
+router.get('/:id',async (req, res)=>{
+
+    const {id}= req.params
+    try {
+        const data = await cont.getById(id)
+        res.send(data)
+    }catch(e){
+        res.status(404).send({error:true,msj:e.message})
+    }
+    
+})
+
+router.post("/", upload.single("thumbnail") , async (req,res)=>{
+    try{
+        const {file} = req
+        const {title,price}= req.body
+        await cont.save({title,price})
+        res.send({msg:"Producto cargado"})
+    }catch{
+        res.send({error:false,msg:"Producto no cargado"})
+    }
+    
+    
+})
+
+
+
+router.put("/:id",(req, res)=>{
+    const {id} = req.params
+    try{
+        const productoNuevo = req.body
+        const idProducto = parseInt(id)
+        res.send(cont.updateById(idProducto,productoNuevo))
+
+    }catch (err){
+        res.status(404).send(err.msg)
+
     }
 
 })
 
 
 router.delete("/:id",(req, res) => {
-    
     const {id} = req.params
-    const arrayBorrado = productos.filter((e) => e.id != id)
+    try{
+        const idProducto = parseInt(id)
+        res.send(cont.deleteById(idProducto))
 
-    if(arrayBorrado){
-        res.send(arrayBorrado)
-
-    }else{
-        console.log("Producto no encontrado")
+    }catch (error) {
+        res.status(404).send(error.msg)
     }
-
 })
 
 
