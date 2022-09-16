@@ -24,15 +24,13 @@ class Datos {
         const data = await fs.promises.readFile(`${this.archivo}`, "utf-8");
         const productos = JSON.parse(data);
         const producto = productos.find((producto) => producto.id == id);
-        if (producto) {
-            return producto;
-        } else {
-            throw new Error("Producto no encontrado");
+        if(producto){
+            console.log(producto)
+            return producto
+        }else{
+            return "hubo un error"
         }
-
-
     }
-
     async random() {
         try {
             const data = await fs.promises.readFile(`${this.archivo}`, "utf-8")
@@ -74,14 +72,10 @@ class Datos {
         } catch (error) {
             return "error al leer el archivo"
         }
-
-
     }
     async deleteAll() {
         try {
-
             fs.promises.writeFile(`${this.archivo}`, JSON.stringify([]))
-
             console.log('se borro la lista')
         } catch (err) {
             console.error("ocurrio un error", err)
@@ -94,7 +88,7 @@ class Datos {
             const data = fs.readFileSync(this.archivo, "utf-8");
             let dataParseada = JSON.parse(data);
             let productoViejo = dataParseada.find((objeto) => objeto.id === id);
-            
+
             if (productoViejo === undefined) {
                 throw {
                     msg: "404 Not found"
@@ -112,16 +106,10 @@ class Datos {
 
         } catch (error) {
             return "no se encontro el producto a cambiar"
-
         }
-
-
 
     }
 }
-
-
-
 
 
 // async function start() {
