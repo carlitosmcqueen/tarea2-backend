@@ -37,9 +37,7 @@ class Datos {
             const dataArray = JSON.parse(data);
             const aleatorio = Math.floor(Math.random() * dataArray.length);
             const valor = dataArray[aleatorio]
-
             return valor
-
         } catch {
             return "ocurrio un error inesperado"
         }
